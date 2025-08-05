@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en" class="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alejandro Apodaca - Resume</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+        }
+        
+        /* --- Sticky Navbar --- */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 12px 0;
+        }
+        
+        html.dark .navbar {
+            background: #374151;
+            border-bottom: 1px solid #4b5563;
+        }
+        
+        /* --- A4 Layout Styling --- */
+        @page {
+            size: A4;
+            margin: 0;
+        }
+        
+        /* A4 dimensions: 816px x 1056px at 96 DPI */
+        #resume-wrapper {
+            width: 816px;
+            height: 1056px;
+            margin: 20px auto;
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Content container with exact dimensions */
+        #resume-container {
+            width: 100%;
+            height: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        
+        /* Screen vs Print styling */
+        @media screen {
+            body {
+                padding-bottom: 40px;
+            }
+        }
+        
+        @media print {
+            body, html { 
+                margin: 0; 
+                padding: 0; 
+                background-color: #fff !important; 
+            }
+            .no-print { 
+                display: none !important; 
+            }
+            #resume-wrapper { 
+                margin: 0; 
+                box-shadow: none; 
+                width: 100%; 
+                height: 100vh;
+            }
+        }
+        
+        /* Responsive design for smaller screens */
+        @media (max-width: 850px) {
+            #resume-wrapper {
+                width: 100%;
+                height: auto;
+                margin: 10px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+            #resume-container {
+                padding: 16px;
+            }
+        }
+
+        /* PDF Export Optimizations */
+        .pdf-capturing {
+            transform: none !important;
+            margin: 0 !important;
+            box-shadow: none !important;
+        }
+
+        /* Ensure text doesn't overlap during capture */
+        #resume-container * {
+            box-sizing: border-box;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        /* Prevent text overflow in small containers */
+        #resume-container div[style*="position: absolute"] {
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Dark mode card backgrounds - force override */
+        html.dark [style*="background: #F7F7F7"] {
+            background: #374151 !important;
+        }
+    </style>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="text-gray-800 dark:text-gray-200 dark:bg-gray-900 transition-colors duration-300">
+
+    <!-- Sticky Navbar -->
+    <nav class="navbar no-print">
+        <div class="max-w-[816px] mx-auto px-4 flex justify-between items-center">
+            <h1 class="text-lg font-bold text-gray-900 dark:text-white">Resume Preview</h1>
+            <div class="flex items-center gap-3">
+                <button id="lang-toggle" class="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded text-sm w-20 text-center hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"></button>
+                <button id="theme-toggle" class="px-3 py-1.5 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-white rounded text-sm hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                    <span class="dark:hidden">🌙</span>
+                    <span class="hidden dark:inline">☀️</span>
+                </button>
+                <button id="export-pdf" class="px-4 py-1.5 bg-green-500 text-white rounded text-sm hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium">Export PDF</button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- A4 Resume Wrapper -->
+    <div id="resume-wrapper">
+        <!-- Resume Container with exact A4 dimensions -->
+        <div id="resume-container" class="bg-white dark:bg-gray-900">
+            
+            <!-- Header Name Section -->
+            <div style="width: 480px; height: 70px; position: absolute; left: 168px; top: 16px; background: #F7F7F7; border-radius: 7px;" class="dark:!bg-gray-800"></div>
+            <div style="position: absolute; left: 185px; top: 26px; width: 446px; height: 50px; display: flex; align-items: center; justify-content: center;">
+                <h1 id="resume-name" style="text-align: center; color: black; font-size: 32px; font-family: Inter; font-weight: 700; line-height: 1.1; margin: 0;" class="dark:text-white"></h1>
+            </div>
+
+            <!-- Summary Section -->
+            <div style="width: 788px; height: 170px; position: absolute; left: 12px; top: 101px;">
+                <div style="width: 788px; height: 170px; background: #F7F7F7; border-radius: 7px;" class="dark:!bg-gray-800"></div>
+                <div style="position: absolute; left: 16px; top: 12px;">
+                    <h2 id="summary-title" style="color: black; font-size: 16px; font-family: Inter; font-weight: 700; margin: 0;" class="dark:text-white"></h2>
+                </div>
+                <div style="width: 753px; height: 130px; position: absolute; left: 17px; top: 35px; overflow: hidden;">
+                    <p id="summary-content" style="color: black; font-size: 12px; font-family: Inter; font-weight: 500; word-wrap: break-word; line-height: 1.4; margin: 0;" class="dark:text-gray-300"></p>
+                </div>
+            </div>
+
+            <!-- Left Column Background -->
+            <div style="width: 260px; height: 774px; position: absolute; left: 12px; top: 281px; background: #F7F7F7; border-radius: 7px;" class="dark:!bg-gray-800"></div>
+            
+            <!-- Left Column Content -->
+            <div style="position: absolute; left: 12px; top: 281px; width: 260px;">
+                
+                <!-- Contact Section -->
+                <div style="width: 256px; height: 150px; position: relative;">
+                    <h3 id="contact-title" style="position: absolute; left: 16px; top: 14px; color: black; font-size: 15px; font-family: Inter; font-weight: 700; margin: 0;" class="dark:text-white"></h3>
+                    <div id="contact-content" style="width: 224px; height: 115px; position: absolute; left: 16px; top: 35px; color: black; font-size: 10px; font-family: Inter; font-weight: 400; word-wrap: break-word; overflow: hidden;" class="dark:text-gray-300"></div>
+                </div>
+                
+                <!-- Skills Section -->
+                <div style="width: 256px; height: 160px; position: relative;">
+                    <h3 id="skills-title" style="position: absolute; left: 16px; top: 14px; color: black; font-size: 15px; font-family: Inter; font-weight: 700; margin: 0;" class="dark:text-white"></h3>
+                    <div id="skills-content" style="width: 224px; height: 125px; position: absolute; left: 16px; top: 35px; color: black; font-size: 10px; font-family: Inter; font-weight: 400; word-wrap: break-word; overflow: hidden;" class="dark:text-gray-300"></div>
+                </div>
+                
+                <!-- Languages Section -->
+                <div style="width: 256px; height: 110px; position: relative;">
+                    <h3 id="languages-title" style="position: absolute; left: 16px; top: 14px; color: black; font-size: 15px; font-family: Inter; font-weight: 700; margin: 0;" class="dark:text-white"></h3>
+                    <div id="languages-content" style="width: 224px; height: 75px; position: absolute; left: 16px; top: 35px; color: black; font-size: 10px; font-family: Inter; font-weight: 700; word-wrap: break-word; overflow: hidden;" class="dark:text-gray-300"></div>
+                </div>
+                
+                <!-- References Section -->
+                <div style="width: 256px; height: 250px; position: relative;">
+                    <h3 id="references-title" style="position: absolute; left: 16px; top: 14px; color: black; font-size: 15px; font-family: Inter; font-weight: 700; margin: 0;" class="dark:text-white"></h3>
+                    <div id="references-content" style="width: 224px; height: 215px; position: absolute; left: 16px; top: 35px; color: black; font-size: 9px; font-family: Inter; font-weight: 400; word-wrap: break-word; overflow: hidden;" class="dark:text-gray-300"></div>
+                </div>
+                
+            </div>
+
+            <!-- Education Section -->
+            <div style="width: 516px; height: 165px; position: absolute; left: 284px; top: 281px;">
+                <div style="width: 516px; height: 165px; background: #F7F7F7; border-radius: 7px;" class="dark:!bg-gray-800"></div>
+                <h3 id="education-title" style="position: absolute; left: 16px; top: 12px; color: black; font-size: 16px; font-family: Inter; font-weight: 700; margin: 0;" class="dark:text-white"></h3>
+                <div id="education-content" style="width: 486px; height: 130px; position: absolute; left: 16px; top: 35px; color: black; font-size: 10px; font-family: Inter; font-weight: 400; word-wrap: break-word; overflow: hidden;" class="dark:text-gray-300"></div>
+            </div>
+
+            <!-- Projects & Activities Section -->
+            <div style="width: 516px; height: 500px; position: absolute; left: 284px; top: 456px;">
+                <div style="width: 516px; height: 500px; background: #F7F7F7; border-radius: 7px;" class="dark:!bg-gray-800"></div>
+                <h3 id="projects-title" style="position: absolute; left: 16px; top: 12px; color: black; font-size: 16px; font-family: Inter; font-weight: 700; margin: 0;" class="dark:text-white"></h3>
+                
+                <!-- Work Experience -->
+                <div style="position: absolute; left: 16px; top: 35px; width: 484px; height: 20px; color: black; font-size: 13px; font-family: Inter; font-weight: 700;" class="dark:text-white">
+                    <span id="work-experience-title"></span>
+                </div>
+                <div id="experience-content" style="width: 484px; height: 210px; position: absolute; left: 24px; top: 58px; color: black; font-size: 10px; font-family: Inter; font-weight: 400; word-wrap: break-word; overflow: visible; line-height: 1.3;" class="dark:text-gray-300"></div>
+                
+                <!-- App Development -->
+                <div style="position: absolute; left: 16px; top: 275px; width: 484px; height: 20px; color: black; font-size: 13px; font-family: Inter; font-weight: 700;" class="dark:text-white">
+                    <span id="app-dev-title"></span>
+                </div>
+                <div id="app-dev-content" style="width: 484px; height: 200px; position: absolute; left: 24px; top: 298px; color: black; font-size: 10px; font-family: Inter; font-weight: 500; word-wrap: break-word; overflow: visible; line-height: 1.3;" class="dark:text-gray-300"></div>
+            </div>
+
+            <!-- Technical Skills Section -->
+            <div style="width: 516px; height: 88px; position: absolute; left: 284px; top: 956px;">
+                <div style="width: 516px; height: 88px; background: #F7F7F7; border-radius: 7px;" class="dark:!bg-gray-800"></div>
+                <h3 id="tech-skills-title" style="position: absolute; left: 16px; top: 6px; color: black; font-size: 16px; font-family: Inter; font-weight: 700; margin: 0;" class="dark:text-white"></h3>
+                <div id="tech-skills-content" style="width: 484px; height: 60px; position: absolute; left: 16px; top: 26px; color: black; font-size: 8px; font-family: Inter; font-weight: 400; word-wrap: break-word; overflow: visible; line-height: 1.2;" class="dark:text-gray-300"></div>
+            </div>
+
+        </div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Make jsPDF available globally
+    const { jsPDF } = window.jspdf;
+
+    // --- DATA OBJECT (ARB) ---
+    const resumeData = {
+        en: {
+            name: "Alejandro Apodaca Córdova",
+            summary: {
+                title: "Summary",
+                content: "Software developer with a foundation in self-taught programming, I efficiently learn and apply new technologies. I have created three successful applications for iOS and Android, aiding thousands of students globally in enhancing their homework and lifestyle. Alongside software development, I am currently studying Mechatronics Engineering, giving me a different view on technology. I aim to use my skills to make a real difference, combining software passion with engineering insights."
+            },
+            contact: {
+                title: "Contact / Information",
+                phone: "+52 686 572 9088",
+                email: "Alejandro.apodaca@cetys.edu.mx",
+                location: "Mexicali, Baja California, México",
+                portfolio: { text: "Web Portfolio", url: "https://apoapps.com" },
+                appStore: { text: "App Store Developer Profile", url: "https://apps.apple.com/mx/developer/alejandro-apodaca/id1524127326" }
+            },
+            skills: {
+                title: "Skills",
+                list: ["Leadership", "Time Management", "Responsible", "Resilient", "Self-taught", "Emotional Intelligence"]
+            },
+            languages: {
+                title: "Languages",
+                list: [
+                    { lang: "Spanish", level: "Native" },
+                    { lang: "English", level: "Fluent" }
+                ]
+            },
+            references: {
+                title: "References",
+                list: [
+                    { name: "Viviana Chiang", title: "Test Engineer", company: "Tesla, Inc.", email: "vchiangauyon@tesla.com", phone: "+1 (669) 248 6203" },
+                    { name: "Veronica Rojas", title: "Director of CEID", company: "CETYS University", email: "veronica.rojas@cetys.mx", phone: "+52 646 197 2847" }
+                ]
+            },
+            education: {
+                title: "Education",
+                list: [
+                    { year: "Current", degree: "University", description: "Currently pursuing a degree in Mechatronics Engineering at CETYS University, as of 6th semester 2024." },
+                    { year: "2025", degree: "Recognition", description: "For contributions to Tri-Go Math and the Mexicali City Council voting system. Issued by the School of Engineering, CETYS Universidad." },
+                    { year: "2022", degree: "Scholarship", description: "90% Scholarship with SRAX at CETYS UNIVERSIDAD." },
+                    { year: "2021", degree: "Recognition", description: "Outstanding student of the CobachBC High School, Baja California campus in Mexicali." },
+                    { year: "2021", degree: "Award", description: "Recipient of the State Youth Award in Baja California in the category 'Entrepreneurial Ingenuity'." }
+                ]
+            },
+            projects: {
+                title: "Projects & Activities",
+                experience: {
+                    title: "Work Experience",
+                    list: [
+                        { year: "2024", role: "Developer | Mexicali City Council Voting System", collaboration: "In collaboration with CEID, CETYS University", description: "Led the full development of a digital voting app for council sessions, deployed on Android tablets with real-time result display.", details: ["Frontend: Built a responsive, user-focused UI in Flutter/Dart.", "Backend: Developed REST APIs with Node.js, Express, and MongoDB, using WebSockets for live sync.", "Design: Created a clean, intuitive UX tailored for non-technical users.", "Integration: Connected Flutter frontend to backend services via API and WebSockets.", "Impact: Streamlined the voting process and boosted transparency. Gained full-stack experience and advanced backend skills."] }
+                    ]
+                },
+                appDev: {
+                    title: "App Development",
+                    list: [
+                        { year: "2025", name: "Tri-Go Math Web", description: "Created the web version of Tri-Go Math, my most well-known math app, using TypeScript, Next.js, TailwindCSS, and ShadCN UI.", url: "#" },
+                        { year: "2023", name: "WakeUp App", description: "Developed with Flutter, available on iOS and Android, to enhance users' sleep by analyzing their sleep cycles and providing customized alarms.", url: "#" },
+                        { year: "2021", name: "Fisik", description: "Launched a comprehensive physics educational resource, covering key topics, on iOS and Android platforms, made in Flutter.", url: "#" },
+                        { year: "2020", name: "Tri-Go Math App", description: "Released on iOS and Android, celebrated for helping nearly 500,000 students around the world with their math homework, created with Flutter.", url: "#" },
+                        { year: "2020", name: "Endless Beats & Mello vs School", description: "Programmed two video games as my introduction into real software programming using GODOT Engine 3.", url: "#" }
+                    ]
+                }
+            },
+            technicalSkills: {
+                title: "Technical Skills",
+                list: [
+                    { area: "Android Development", skills: "Kotlin & Jetpack Compose, Material Design." },
+                    { area: "Cross-Platform Development", skills: "Production apps with native feature integration (alarms, ads, notifications)." },
+                    { area: "iOS Development", skills: "Swift & SwiftUI." },
+                    { area: "Software Architecture", skills: "MVC, Provider, React Hooks. Clean, scalable code structure." },
+                    { area: "Frontend Web Development", skills: "TypeScript, React, Next.js, TailwindCSS." },
+                    { area: "UI/UX Design", skills: "Figma. Experience with Material Design & Apple Human Interface Guidelines." },
+                    { area: "Backend Development", skills: "FastAPI, PostgreSQL, MongoDB, WebSockets." },
+                    { area: "Computer Science Foundations", skills: "Data structures, algorithms, performance." },
+                    { area: "Cybersecurity & Networking", skills: "Linux environments, secure development, networking." },
+                    { area: "Hardware & Embedded Systems", skills: "ESP32, Raspberry Pi, IoT projects." }
+                ]
+            }
+        },
+        es: {
+            name: "Alejandro Apodaca Córdova",
+            summary: {
+                title: "Resumen",
+                content: "Desarrollador de software con una base en programación autodidacta, aprendo y aplico eficientemente nuevas tecnologías. He creado tres aplicaciones exitosas para iOS y Android, ayudando a miles de estudiantes a nivel mundial a mejorar en sus tareas y estilo de vida. Paralelamente al desarrollo de software, actualmente estudio Ingeniería Mecatrónica, lo que me da una perspectiva diferente sobre la tecnología. Mi objetivo es utilizar mis habilidades para marcar una diferencia real, combinando mi pasión por el software con conocimientos de ingeniería."
+            },
+            contact: {
+                title: "Contacto / Información",
+                phone: "+52 686 572 9088",
+                email: "Alejandro.apodaca@cetys.edu.mx",
+                location: "Mexicali, Baja California, México",
+                portfolio: { text: "Portafolio Web", url: "https://apoapps.com" },
+                appStore: { text: "Perfil de Desarrollador App Store", url: "https://apps.apple.com/mx/developer/alejandro-apodaca/id1524127326" }
+            },
+            skills: {
+                title: "Habilidades",
+                list: ["Liderazgo", "Gestión del Tiempo", "Responsable", "Resiliente", "Autodidacta", "Inteligencia Emocional"]
+            },
+            languages: {
+                title: "Idiomas",
+                list: [
+                    { lang: "Español", level: "Nativo" },
+                    { lang: "Inglés", level: "Fluido" }
+                ]
+            },
+            references: {
+                title: "Referencias",
+                list: [
+                    { name: "Viviana Chiang", title: "Ingeniera de Pruebas", company: "Tesla, Inc.", email: "vchiangauyon@tesla.com", phone: "+1 (669) 248 6203" },
+                    { name: "Verónica Rojas", title: "Directora de CEID", company: "CETYS Universidad", email: "veronica.rojas@cetys.mx", phone: "+52 646 197 2847" }
+                ]
+            },
+            education: {
+                title: "Educación",
+                list: [
+                    { year: "Actual", degree: "Universidad", description: "Actualmente cursando la carrera de Ingeniería Mecatrónica en CETYS Universidad, 6to semestre 2024." },
+                    { year: "2025", degree: "Reconocimiento", description: "Por contribuciones a Tri-Go Math y al sistema de votación del Cabildo de Mexicali. Emitido por la Escuela de Ingeniería, CETYS Universidad." },
+                    { year: "2022", degree: "Beca", description: "Beca del 90% con SRAX en CETYS UNIVERSIDAD." },
+                    { year: "2021", degree: "Reconocimiento", description: "Alumno destacado del plantel CobachBC Baja California en Mexicali." },
+                    { year: "2021", degree: "Premio", description: "Galardonado con el Premio Estatal de la Juventud en Baja California en la categoría 'Ingenio Emprendedor'." }
+                ]
+            },
+            projects: {
+                title: "Proyectos y Actividades",
+                experience: {
+                    title: "Experiencia Laboral",
+                    list: [
+                        { year: "2024", role: "Desarrollador | Sistema de Votación del Cabildo de Mexicali", collaboration: "En colaboración con CEID, CETYS Universidad", description: "Lideré el desarrollo completo de una aplicación de votación digital para las sesiones del cabildo, desplegada en tabletas Android con visualización de resultados en tiempo real.", details: ["Frontend: Construí una interfaz de usuario responsiva y centrada en el usuario en Flutter/Dart.", "Backend: Desarrollé APIs REST con Node.js, Express y MongoDB, usando WebSockets para sincronización en vivo.", "Diseño: Creé una UX limpia e intuitiva, adaptada para usuarios no técnicos.", "Integración: Conecté el frontend de Flutter a los servicios del backend mediante API y WebSockets.", "Impacto: Agilicé el proceso de votación y aumenté la transparencia. Adquirí experiencia full-stack y habilidades avanzadas de backend."] }
+                    ]
+                },
+                appDev: {
+                    title: "Desarrollo de Aplicaciones",
+                    list: [
+                        { year: "2025", name: "Tri-Go Math Web", description: "Creé la versión web de Tri-Go Math, mi aplicación de matemáticas más conocida, usando TypeScript, Next.js, TailwindCSS y ShadCN UI.", url: "#" },
+                        { year: "2023", name: "WakeUp App", description: "Desarrollada con Flutter, disponible en iOS y Android, para mejorar el sueño de los usuarios analizando sus ciclos de sueño y proporcionando alarmas personalizadas.", url: "#" },
+                        { year: "2021", name: "Fisik", description: "Lancé un recurso educativo integral de física, cubriendo temas clave, en plataformas iOS y Android, hecho en Flutter.", url: "#" },
+                        { year: "2020", name: "Tri-Go Math App", description: "Lanzada en iOS y Android, celebrada por ayudar a casi 500,000 estudiantes de todo el mundo con sus tareas de matemáticas, creada con Flutter.", url: "#" },
+                        { year: "2020", name: "Endless Beats & Mello vs School", description: "Programé dos videojuegos como mi introducción a la programación real de software usando GODOT Engine 3.", url: "#" }
+                    ]
+                }
+            },
+            technicalSkills: {
+                title: "Habilidades Técnicas",
+                list: [
+                    { area: "Desarrollo Android", skills: "Kotlin & Jetpack Compose, Material Design." },
+                    { area: "Desarrollo Multiplataforma", skills: "Apps en producción con integración de funciones nativas (alarmas, anuncios, notificaciones)." },
+                    { area: "Desarrollo iOS", skills: "Swift & SwiftUI." },
+                    { area: "Arquitectura de Software", skills: "MVC, Provider, React Hooks. Estructura de código limpia y escalable." },
+                    { area: "Desarrollo Web Frontend", skills: "TypeScript, React, Next.js, TailwindCSS." },
+                    { area: "Diseño UI/UX", skills: "Figma. Experiencia con Material Design y Guías de Interfaz Humana de Apple." },
+                    { area: "Desarrollo Backend", skills: "FastAPI, PostgreSQL, MongoDB, WebSockets." },
+                    { area: "Fundamentos de Ciencias de la Computación", skills: "Estructuras de datos, algoritmos, rendimiento." },
+                    { area: "Ciberseguridad y Redes", skills: "Entornos Linux, desarrollo seguro, redes." },
+                    { area: "Hardware y Sistemas Embebidos", skills: "ESP32, Raspberry Pi, proyectos de IoT." }
+                ]
+            }
+        }
+    };
+
+    let currentLang = 'en';
+
+    // --- RENDER FUNCTION ---
+    function renderResume(lang) {
+        const data = resumeData[lang];
+        
+        // Header
+        document.getElementById('resume-name').textContent = data.name;
+        
+        // Summary
+        document.getElementById('summary-title').textContent = data.summary.title;
+        document.getElementById('summary-content').textContent = data.summary.content;
+        
+        // Contact
+        document.getElementById('contact-title').textContent = data.contact.title;
+        const contactContent = document.getElementById('contact-content');
+        contactContent.innerHTML = `${data.contact.phone}<br/><span style="text-decoration: underline;">${data.contact.email}</span><br/>${data.contact.location}<br/><span style="text-decoration: underline;">${data.contact.portfolio.text}</span><br/><span style="text-decoration: underline;">${data.contact.appStore.text}</span>`;
+        contactContent.style.lineHeight = '1.4';
+        contactContent.style.fontSize = '10px';
+        
+        // Skills
+        document.getElementById('skills-title').textContent = data.skills.title;
+        const skillsContent = document.getElementById('skills-content');
+        skillsContent.innerHTML = data.skills.list.join('<br/>');
+        skillsContent.style.lineHeight = '1.4';
+        skillsContent.style.fontSize = '10px';
+        
+        // Languages
+        document.getElementById('languages-title').textContent = data.languages.title;
+        const languagesContent = document.getElementById('languages-content');
+        languagesContent.innerHTML = data.languages.list.map(lang => `<span style="font-weight: 700;">${lang.lang}</span> - ${lang.level}`).join('<br/>');
+        languagesContent.style.lineHeight = '1.4';
+        languagesContent.style.fontSize = '10px';
+        
+        // References
+        document.getElementById('references-title').textContent = data.references.title;
+        const referencesContent = document.getElementById('references-content');
+        referencesContent.innerHTML = data.references.list.map(ref => 
+            `<span style="font-weight: 700;">${ref.name}</span> ${ref.title} ${ref.company} ${ref.email} ${ref.phone}`
+        ).join('<br/><br/>');
+        referencesContent.style.lineHeight = '1.3';
+        referencesContent.style.fontSize = '9px';
+        
+        // Education
+        document.getElementById('education-title').textContent = data.education.title;
+        const educationContent = document.getElementById('education-content');
+        educationContent.innerHTML = data.education.list.map(edu => 
+            `<span style="font-weight: 700;">- ${edu.year} - ${edu.degree}:</span> ${edu.description}`
+        ).join('<br/>');
+        educationContent.style.lineHeight = '1.3';
+        educationContent.style.fontSize = '10px';
+        
+        // Projects
+        document.getElementById('projects-title').textContent = data.projects.title;
+        document.getElementById('work-experience-title').textContent = data.projects.experience.title;
+        
+        // Work Experience
+        const experienceContent = document.getElementById('experience-content');
+        experienceContent.innerHTML = data.projects.experience.list.map(exp => `
+            <span style="font-weight: 700;">${exp.year} - ${exp.role}</span><br/>
+            <span style="font-weight: 500;">${exp.collaboration}</span><br/>
+            ${exp.description}<br/>
+            ${exp.details.join('<br/>')}
+        `).join('<br/>');
+        experienceContent.style.lineHeight = '1.3';
+        experienceContent.style.fontSize = '10px';
+        experienceContent.style.overflow = 'visible';
+        
+        // App Development
+        document.getElementById('app-dev-title').textContent = data.projects.appDev.title + ':';
+        const appDevContent = document.getElementById('app-dev-content');
+        appDevContent.innerHTML = data.projects.appDev.list.map(app => 
+            `${app.year} - <span style="font-weight: 700;">${app.name}</span>: ${app.description} <span style="text-decoration: underline;">(link)</span>`
+        ).join('<br/>');
+        appDevContent.style.lineHeight = '1.3';
+        appDevContent.style.fontSize = '10px';
+        appDevContent.style.overflow = 'visible';
+        
+        // Technical Skills
+        document.getElementById('tech-skills-title').textContent = data.technicalSkills.title;
+        const techSkillsContent = document.getElementById('tech-skills-content');
+        techSkillsContent.innerHTML = data.technicalSkills.list.map(skill => 
+            `<span style="font-weight: 700;">${skill.area}</span> - ${skill.skills}`
+        ).join('<br/>');
+        techSkillsContent.style.lineHeight = '1.2';
+        techSkillsContent.style.fontSize = '8px';
+        techSkillsContent.style.overflow = 'visible';
+        
+        updateLangToggle();
+    }
+
+    // --- EVENT LISTENERS ---
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+        document.documentElement.classList.toggle('dark');
+    });
+
+    const langToggleBtn = document.getElementById('lang-toggle');
+    langToggleBtn.addEventListener('click', () => {
+        currentLang = currentLang === 'en' ? 'es' : 'en';
+        renderResume(currentLang);
+    });
+    
+    function updateLangToggle() {
+        langToggleBtn.textContent = currentLang === 'en' ? 'English' : 'Español';
+    }
+
+    // --- IMPROVED PDF EXPORT LOGIC ---
+    document.getElementById('export-pdf').addEventListener('click', () => {
+        const exportButton = document.getElementById('export-pdf');
+        const originalButtonText = exportButton.textContent;
+        exportButton.textContent = currentLang === 'en' ? 'Generating...' : 'Generando...';
+        exportButton.disabled = true;
+
+        const resumeWrapper = document.getElementById('resume-wrapper');
+        
+        // Temporarily hide navbar during capture
+        const navbar = document.querySelector('.navbar');
+        navbar.style.display = 'none';
+        
+        html2canvas(resumeWrapper, {
+            scale: 3, // Higher resolution for better quality
+            useCORS: true,
+            logging: false,
+            allowTaint: true,
+            backgroundColor: '#ffffff',
+            width: 816, // Exact width of our resume wrapper
+            height: 1056, // Exact height of our resume wrapper
+            windowWidth: 816,
+            windowHeight: 1056,
+            scrollX: 0,
+            scrollY: 0,
+            onclone: function(clonedDoc) {
+                // Ensure all styles are properly applied in the cloned document
+                const clonedWrapper = clonedDoc.getElementById('resume-wrapper');
+                if (clonedWrapper) {
+                    clonedWrapper.style.margin = '0';
+                    clonedWrapper.style.boxShadow = 'none';
+                    clonedWrapper.style.transform = 'none';
+                    clonedWrapper.style.position = 'relative';
+                    clonedWrapper.classList.add('pdf-capturing');
+                }
+                
+                // Ensure all content containers have proper styling
+                const clonedContainer = clonedDoc.getElementById('resume-container');
+                if (clonedContainer) {
+                    clonedContainer.style.width = '816px';
+                    clonedContainer.style.height = '1056px';
+                    clonedContainer.style.padding = '12px';
+                    clonedContainer.style.boxSizing = 'border-box';
+                    clonedContainer.style.position = 'relative';
+                    clonedContainer.style.overflow = 'hidden';
+                }
+                
+                // Remove any navbar elements from the cloned document
+                const navbars = clonedDoc.querySelectorAll('.navbar, .no-print');
+                navbars.forEach(nav => nav.remove());
+                
+                // Ensure all text elements have proper styling
+                const textElements = clonedDoc.querySelectorAll('#resume-container *');
+                textElements.forEach(el => {
+                    // Ensure proper line-height for readability
+                    if (el.style.lineHeight === '' || el.style.lineHeight === '1.2') {
+                        el.style.lineHeight = '1.3';
+                    }
+                    // Ensure no text overflow
+                    el.style.wordWrap = 'break-word';
+                    el.style.overflowWrap = 'break-word';
+                    el.style.boxSizing = 'border-box';
+                });
+                
+                // Apply specific font sizes to ensure readability
+                const normalTextElements = clonedDoc.querySelectorAll('#contact-content, #skills-content, #languages-content, #education-content, #experience-content, #app-dev-content');
+                normalTextElements.forEach(el => {
+                    if (!el.style.fontSize) {
+                        el.style.fontSize = '10px';
+                        el.style.lineHeight = '1.3';
+                        el.style.overflow = 'visible';
+                    }
+                });
+                
+                const smallTextElements = clonedDoc.querySelectorAll('#references-content');
+                smallTextElements.forEach(el => {
+                    if (!el.style.fontSize) {
+                        el.style.fontSize = '9px';
+                        el.style.lineHeight = '1.3';
+                        el.style.overflow = 'visible';
+                    }
+                });
+                
+                const verySmallTextElements = clonedDoc.querySelectorAll('#tech-skills-content');
+                verySmallTextElements.forEach(el => {
+                    if (!el.style.fontSize) {
+                        el.style.fontSize = '8px';
+                        el.style.lineHeight = '1.2';
+                        el.style.overflow = 'visible';
+                    }
+                });
+            }
+        }).then(canvas => {
+            // Show navbar again
+            navbar.style.display = '';
+            
+            const imgData = canvas.toDataURL('image/png', 1.0);
+            const pdf = new jsPDF({
+                orientation: 'portrait',
+                unit: 'mm',
+                format: 'a4'
+            });
+
+            // A4 dimensions in mm
+            const pdfWidth = 210;
+            const pdfHeight = 297;
+            
+            // Calculate proper scaling to maintain aspect ratio
+            const canvasAspectRatio = canvas.width / canvas.height;
+            const pdfAspectRatio = pdfWidth / pdfHeight;
+            
+            let imgWidth, imgHeight, offsetX = 0, offsetY = 0;
+            
+            if (canvasAspectRatio > pdfAspectRatio) {
+                // Canvas is wider than PDF - fit to width
+                imgWidth = pdfWidth;
+                imgHeight = pdfWidth / canvasAspectRatio;
+                offsetY = (pdfHeight - imgHeight) / 2;
+            } else {
+                // Canvas is taller than PDF - fit to height
+                imgHeight = pdfHeight;
+                imgWidth = pdfHeight * canvasAspectRatio;
+                offsetX = (pdfWidth - imgWidth) / 2;
+            }
+            
+            // Add the image centered and properly scaled
+            pdf.addImage(imgData, 'PNG', offsetX, offsetY, imgWidth, imgHeight, undefined, 'FAST');
+            
+            // Save with language-specific filename
+            const fileName = `Alejandro_Apodaca_Resume_${currentLang.toUpperCase()}.pdf`;
+            pdf.save(fileName);
+
+        }).catch(err => {
+            // Show navbar again in case of error
+            navbar.style.display = '';
+            console.error('Error generating PDF:', err);
+            const errorMsg = currentLang === 'en' ? 'Could not generate PDF. See console for details.' : 'No se pudo generar el PDF. Ver consola para detalles.';
+            alert(errorMsg);
+        }).finally(() => {
+            exportButton.textContent = originalButtonText;
+            exportButton.disabled = false;
+        });
+    });
+
+    // --- INITIAL RENDER ---
+    renderResume(currentLang);
+});
+</script>
+
+</body>
+</html>
